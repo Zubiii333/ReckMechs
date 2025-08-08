@@ -1,14 +1,9 @@
-[providers]
-php = "8.2"
-
+# Force PHP detection and configuration
 [phases.setup]
 nixPkgs = ["php82", "php82Packages.composer"]
 
 [phases.build]
-cmds = ["composer install --no-dev --optimize-autoloader"]
+cmds = ["composer install --no-dev --optimize-autoloader --no-interaction"]
 
 [start]
 cmd = "php -S 0.0.0.0:$PORT -t . backend/server.php"
-
-[variables]
-PORT = "8080"

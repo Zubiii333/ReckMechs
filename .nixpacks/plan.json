@@ -1,0 +1,8 @@
+{
+  "providers": ["php"],
+  "buildCmd": "composer install --no-dev --optimize-autoloader --no-interaction",
+  "startCmd": "php -S 0.0.0.0:$PORT -t . backend/server.php",
+  "variables": {
+    "PHP_VERSION": "8.2"
+  }
+}
