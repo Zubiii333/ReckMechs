@@ -1,3 +1,6 @@
+[providers]
+php = "8.2"
+
 [phases.setup]
 nixPkgs = ["php82", "php82Packages.composer"]
 
@@ -6,3 +9,6 @@ cmds = ["composer install --no-dev --optimize-autoloader"]
 
 [start]
 cmd = "php -S 0.0.0.0:$PORT -t . backend/server.php"
+
+[variables]
+PORT = "8080"
