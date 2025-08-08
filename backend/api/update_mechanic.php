@@ -55,9 +55,6 @@ try {
         exit();
     }
 
-    // Create database connection
-    $pdo = new PDO($dsn, $username, $password, $options);
-
     // Check if mechanic exists
     $checkStmt = $pdo->prepare("SELECT id FROM mechanics WHERE id = ?");
     $checkStmt->execute([$id]);

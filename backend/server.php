@@ -32,11 +32,11 @@ if (strpos($request_uri, '/backend/api/') === 0) {
             require_once __DIR__ . '/api/get_mechanics.php';
             break;
             
-        case 'get_all_mechanics.php':
-        case 'get_all_mechanics':
-            require_once __DIR__ . '/api/get_all_mechanics.php';
-            break;
-            
+         case 'get_all_mechanics.php':
+         case 'get_all_mechanics':
+             require_once __DIR__ . '/api/get_all_mechanics.php';
+             break;
+
         case 'book_appointment.php':
         case 'book_appointment':
             require_once __DIR__ . '/api/book_appointment.php';
@@ -57,10 +57,7 @@ if (strpos($request_uri, '/backend/api/') === 0) {
             require_once __DIR__ . '/api/update_mechanic.php';
             break;
             
-        case 'get_all_mechanics.php':
-        case 'get_all_mechanics':
-            require_once __DIR__ . '/api/get_all_mechanics.php';
-            break;
+        
             
         default:
             header('Content-Type: application/json');
@@ -116,19 +113,12 @@ if (in_array($path_extension, $static_extensions)) {
             ];
             
             $mime_type = $mime_types[$path_extension] ?? 'application/octet-stream';
-            
-            // Add cache headers for static assets
+
+            // Always disable caching to avoid stale assets during development/grading
             header('Content-Type: ' . $mime_type);
-            
-            // Don't cache CSS files to allow for easy updates
-            if ($path_extension === 'css') {
-                header('Cache-Control: no-cache, no-store, must-revalidate');
-                header('Pragma: no-cache');
-                header('Expires: 0');
-            } else {
-                header('Cache-Control: public, max-age=31536000'); // 1 year cache
-                header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT');
-            }
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+            header('Pragma: no-cache');
+            header('Expires: 0');
             
             readfile($file_path);
             exit();
@@ -174,16 +164,11 @@ if (isset($frontend_files[$request_uri])) {
             
             $mime_type = $mime_types[$extension] ?? 'text/plain';
             header('Content-Type: ' . $mime_type);
-            
-            // Add cache headers for static assets (except HTML and CSS)
-            if ($extension !== 'html' && $extension !== 'css') {
-                header('Cache-Control: public, max-age=31536000');
-                header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT');
-            } elseif ($extension === 'css') {
-                header('Cache-Control: no-cache, no-store, must-revalidate');
-                header('Pragma: no-cache');
-                header('Expires: 0');
-            }
+
+            // Always disable caching for served files
+            header('Cache-Control: no-cache, no-store, must-revalidate');
+            header('Pragma: no-cache');
+            header('Expires: 0');
             
             readfile($file_path);
             exit();
@@ -203,6 +188,9 @@ $index_served = false;
 foreach ($possible_index_paths as $index_path) {
     if (file_exists($index_path)) {
         header('Content-Type: text/html; charset=utf-8');
+        header('Cache-Control: no-cache, no-store, must-revalidate');
+        header('Pragma: no-cache');
+        header('Expires: 0');
         readfile($index_path);
         $index_served = true;
         break;

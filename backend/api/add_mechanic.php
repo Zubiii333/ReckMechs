@@ -46,9 +46,6 @@ try {
         exit();
     }
 
-    // Create database connection
-    $pdo = new PDO($dsn, $username, $password, $options);
-
     // Check if mechanic with same name already exists
     $checkStmt = $pdo->prepare("SELECT id FROM mechanics WHERE name = ?");
     $checkStmt->execute([$name]);

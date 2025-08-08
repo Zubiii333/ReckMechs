@@ -4,6 +4,7 @@ class AdminPanel {
         this.appointments = [];
         this.mechanics = [];
         this.editingRow = null;
+        this.editingMechanicRow = null;
         this.originalData = null;
 
         this.init();
@@ -49,8 +50,88 @@ class AdminPanel {
     }
 
     showMessage(message, type = 'info') {
-        // Messages are now handled silently - no UI feedback
-        console.log(`${type.toUpperCase()}: ${message}`);
+        const messagesArea = document.getElementById('messagesArea');
+        const toastContainer = document.getElementById('toastContainer');
+        if (!messagesArea) {
+            console.log(`${type.toUpperCase()}: ${message}`);
+            return;
+        }
+
+        // Determine class and icon
+        const classMap = {
+            success: 'success-message',
+            error: 'error-message',
+            info: 'info-message'
+        };
+        const iconMap = {
+            success: '✔',
+            error: '✖',
+            info: 'ℹ'
+        };
+
+        const wrapper = document.createElement('div');
+        wrapper.className = classMap[type] || classMap.info;
+        wrapper.style.display = 'flex';
+        wrapper.style.alignItems = 'center';
+        wrapper.style.justifyContent = 'space-between';
+        wrapper.style.gap = '0.75rem';
+
+        const left = document.createElement('div');
+        left.style.display = 'flex';
+        left.style.alignItems = 'center';
+        left.style.gap = '0.5rem';
+
+        const icon = document.createElement('span');
+        icon.textContent = iconMap[type] || iconMap.info;
+        icon.style.fontWeight = '700';
+        icon.style.opacity = '0.9';
+
+        const text = document.createElement('div');
+        text.textContent = message;
+        text.style.lineHeight = '1.5';
+        text.style.fontWeight = '500';
+
+        left.appendChild(icon);
+        left.appendChild(text);
+
+        const closeBtn = document.createElement('button');
+        closeBtn.textContent = 'Dismiss';
+        closeBtn.style.padding = '0.375rem 0.75rem';
+        closeBtn.style.borderRadius = '0.375rem';
+        closeBtn.style.border = '1px solid var(--border)';
+        closeBtn.style.background = 'transparent';
+        closeBtn.style.cursor = 'pointer';
+        closeBtn.style.fontSize = '0.85rem';
+        closeBtn.addEventListener('click', () => {
+            if (wrapper.parentNode) wrapper.parentNode.removeChild(wrapper);
+        });
+
+        wrapper.appendChild(left);
+        wrapper.appendChild(closeBtn);
+
+        // Replace existing messages area content for inline banner
+        messagesArea.innerHTML = '';
+        messagesArea.appendChild(wrapper);
+
+        // Also show a small toast for better visibility
+        if (toastContainer) {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <span style="font-weight:700;">${iconMap[type] || iconMap.info}</span>
+                <span style="font-weight:500; line-height:1.4;">${this.escapeHtml(message)}</span>
+                <button class="toast-close" aria-label="Dismiss">Dismiss</button>
+            `;
+            const close = toast.querySelector('.toast-close');
+            close.addEventListener('click', () => toast.remove());
+            toastContainer.appendChild(toast);
+            setTimeout(() => toast.remove(), type === 'success' ? 5000 : 6000);
+        }
+
+        // Auto-hide
+        setTimeout(() => {
+            if (wrapper.parentNode) wrapper.parentNode.removeChild(wrapper);
+        }, type === 'success' ? 6000 : 5000);
     }
 
     async loadMechanics() {
@@ -77,6 +158,7 @@ class AdminPanel {
 
     async loadAppointments() {
         this.showLoading();
+        let loadedSuccessfully = false;
 
         try {
             // Load mechanics first to ensure they're available for dropdown
@@ -106,7 +188,7 @@ class AdminPanel {
             this.appointments = appointmentsData.appointments || [];
 
             this.renderAppointments();
-            this.showMessage('Appointments loaded successfully', 'success');
+            loadedSuccessfully = true;
 
         } catch (error) {
             console.error('Error loading appointments:', error);
@@ -114,6 +196,7 @@ class AdminPanel {
             this.renderEmptyState();
         } finally {
             this.hideLoading();
+            // Appointments loaded silently
         }
     }
 
@@ -805,11 +888,11 @@ class AdminPanel {
     }
 
     makeRowEditable(row, id, type) {
-        if (this.editingRow) {
-            this.cancelEdit();
+        if (this.editingMechanicRow) {
+            this.cancelMechanicEdit();
         }
 
-        this.editingRow = row;
+        this.editingMechanicRow = row;
         this.originalData = {
             name: row.cells[1].textContent,
             specialization: row.cells[2].textContent
@@ -832,7 +915,7 @@ class AdminPanel {
                     </svg>
                     Save
                 </button>
-                <button class="cancel-btn" onclick="adminPanel.cancelEdit()">
+                <button class="cancel-btn" onclick="adminPanel.cancelMechanicEdit()">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"/>
                         <line x1="6" y1="6" x2="18" y2="18"/>
@@ -844,10 +927,10 @@ class AdminPanel {
     }
 
     async saveMechanicEdit(mechanicId) {
-        if (!this.editingRow) return;
+        if (!this.editingMechanicRow) return;
 
-        const nameInput = this.editingRow.cells[1].querySelector('input');
-        const specializationInput = this.editingRow.cells[2].querySelector('input');
+        const nameInput = this.editingMechanicRow.cells[1].querySelector('input');
+        const specializationInput = this.editingMechanicRow.cells[2].querySelector('input');
 
         const updatedData = {
             id: mechanicId,
@@ -870,11 +953,11 @@ class AdminPanel {
                 const data = await response.json();
                 if (data.success) {
                     // Update the row with new data
-                    this.editingRow.cells[1].textContent = updatedData.name;
-                    this.editingRow.cells[2].textContent = updatedData.specialization;
+                    this.editingMechanicRow.cells[1].textContent = updatedData.name;
+                    this.editingMechanicRow.cells[2].textContent = updatedData.specialization;
                     
                     // Reset the action buttons
-                    this.editingRow.cells[4].innerHTML = `
+                    this.editingMechanicRow.cells[4].innerHTML = `
                         <div class="action-buttons">
                             <button class="edit-btn" onclick="adminPanel.editMechanic(${mechanicId})">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -886,8 +969,8 @@ class AdminPanel {
                         </div>
                     `;
 
-                    this.editingRow.classList.remove('appointment-row', 'editing');
-                    this.editingRow = null;
+                    this.editingMechanicRow.classList.remove('appointment-row', 'editing');
+                    this.editingMechanicRow = null;
                     this.originalData = null;
 
                     // Reload mechanics data
@@ -896,20 +979,20 @@ class AdminPanel {
             }
         } catch (error) {
             console.error('Error updating mechanic:', error);
-            this.cancelEdit();
+            this.cancelMechanicEdit();
         }
     }
 
-    cancelEdit() {
-        if (!this.editingRow) return;
+    cancelMechanicEdit() {
+        if (!this.editingMechanicRow) return;
 
         // Restore original data
-        this.editingRow.cells[1].textContent = this.originalData.name;
-        this.editingRow.cells[2].textContent = this.originalData.specialization;
+        this.editingMechanicRow.cells[1].textContent = this.originalData.name;
+        this.editingMechanicRow.cells[2].textContent = this.originalData.specialization;
 
         // Reset action buttons based on type
-        const mechanicId = this.editingRow.cells[0].textContent;
-        this.editingRow.cells[4].innerHTML = `
+        const mechanicId = this.editingMechanicRow.cells[0].textContent;
+        this.editingMechanicRow.cells[4].innerHTML = `
             <div class="action-buttons">
                 <button class="edit-btn" onclick="adminPanel.editMechanic(${mechanicId})">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -921,8 +1004,8 @@ class AdminPanel {
             </div>
         `;
 
-        this.editingRow.classList.remove('appointment-row', 'editing');
-        this.editingRow = null;
+        this.editingMechanicRow.classList.remove('appointment-row', 'editing');
+        this.editingMechanicRow = null;
         this.originalData = null;
     }
 

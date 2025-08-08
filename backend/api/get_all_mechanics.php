@@ -15,9 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once __DIR__ . '/../config/database.php';
 
 try {
-    // Create database connection
-    $pdo = new PDO($dsn, $username, $password, $options);
-
     // Get all mechanics
     $stmt = $pdo->prepare("SELECT id, name, specialization FROM mechanics ORDER BY name");
     $stmt->execute();
