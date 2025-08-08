@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment - ReckMechs</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                </svg>
+                <span class="brand-name">ReckMechs</span>
+            </a>
+            <div class="nav-actions">
+                <a href="admin.html" class="nav-book-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <span>Admin</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main style="padding-top: 6rem; padding-bottom: 2rem;">
+        <div class="container">
+            <div style="max-width: 800px; margin: 0 auto;">
+                <h1 style="text-align: center; margin-bottom: 2rem; font-size: 2.5rem; color: hsl(var(--foreground));">Book Your Appointment</h1>
+                
+                <!-- Messages Area -->
+                <div id="messagesArea" style="margin-bottom: 2rem;"></div>
+
+                <!-- Booking Form -->
+                <div style="background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 1rem; padding: 2rem; box-shadow: 0 4px 6px hsl(var(--foreground) / 0.1);">
+                    <form id="appointmentForm">
+                        <!-- Personal Information -->
+                        <div style="margin-bottom: 2rem;">
+                            <h2 style="margin-bottom: 1rem; color: hsl(var(--foreground)); font-size: 1.5rem;">Personal Information</h2>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                <div>
+                                    <label for="clientName" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Full Name *</label>
+                                    <input type="text" id="clientName" name="clientName" required 
+                                           style="width: 100%; padding: 0.75rem; border: 1px solid hsl(var(--border)); border-radius: 0.5rem; font-size: 1rem;"
+                                           placeholder="Enter your full name">
+                                    <span class="error-message" id="clientNameError" style="color: hsl(var(--destructive)); font-size: 0.875rem; display: none;"></span>
+                                </div>
+                                <div>
+                                    <label for="clientPhone" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Phone Number *</label>
+                                    <input type="text" id="clientPhone" name="clientPhone" required 
+                                           style="width: 100%; padding: 0.75rem; border: 1px solid hsl(var(--border)); border-radius: 0.5rem; font-size: 1rem;"
+                                           placeholder="1234567890">
+                                    <span class="error-message" id="clientPhoneError" style="color: hsl(var(--destructive)); font-size: 0.875rem; display: none;"></span>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="clientAddress" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Address *</label>
+                                <textarea id="clientAddress" name="clientAddress" required rows="3"
+                                          style="width: 100%; padding: 0.75rem; border: 1px solid hsl(var(--border)); border-radius: 0.5rem; font-size: 1rem; resize: vertical;"
+                                          placeholder="Enter your complete address"></textarea>
+                                <span class="error-message" id="clientAddressError" style="color: hsl(var(--destructive)); font-size: 0.875rem; display: none;"></span>
+                            </div>
+                        </div>
+
+                        <!-- Vehicle Information -->
+                        <div style="margin-bottom: 2rem;">
+                            <h2 style="margin-bottom: 1rem; color: hsl(var(--foreground)); font-size: 1.5rem;">Vehicle Information</h2>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div>
+                                    <label for="carLicense" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Car License Number *</label>
+                                    <input type="text" id="carLicense" name="carLicense" required 
+                                           style="width: 100%; padding: 0.75rem; border: 1px solid hsl(var(--border)); border-radius: 0.5rem; font-size: 1rem;"
+                                           placeholder="ABC-1234">
+                                    <span class="error-message" id="carLicenseError" style="color: hsl(var(--destructive)); font-size: 0.875rem; display: none;"></span>
+                                </div>
+                                <div>
+                                    <label for="carEngine" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Car Engine Number *</label>
+                                    <input type="text" id="carEngine" name="carEngine" required 
+                                           style="width: 100%; padding: 0.75rem; border: 1px solid hsl(var(--border)); border-radius: 0.5rem; font-size: 1rem;"
+                                           placeholder="123456789">
+                                    <span class="error-message" id="carEngineError" style="color: hsl(var(--destructive)); font-size: 0.875rem; display: none;"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Appointment Details -->
+                        <div style="margin-bottom: 2rem;">
+                            <h2 style="margin-bottom: 1rem; color: hsl(var(--foreground)); font-size: 1.5rem;">Appointment Details</h2>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                <div>
+                                    <label for="appointmentDate" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Appointment Date *</label>
+                                    <input type="date" id="appointmentDate" name="appointmentDate" required 
+                                           style="width: 100%; padding: 0.75rem; border: 1px solid hsl(var(--border)); border-radius: 0.5rem; font-size: 1rem;">
+                                    <span class="error-message" id="appointmentDateError" style="color: hsl(var(--destructive)); font-size: 0.875rem; display: none;"></span>
+                                </div>
+                                <div>
+                                    <label for="mechanicSelect" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Select Mechanic *</label>
+                                    <select id="mechanicSelect" name="mechanicId" required 
+                                            style="width: 100%; padding: 0.75rem; border: 1px solid hsl(var(--border)); border-radius: 0.5rem; font-size: 1rem;">
+                                        <option value="">Choose a mechanic...</option>
+                                    </select>
+                                    <span class="error-message" id="mechanicSelectError" style="color: hsl(var(--destructive)); font-size: 0.875rem; display: none;"></span>
+                                </div>
+                            </div>
+                            
+                            <!-- Mechanic Availability Display -->
+                            <div id="mechanicAvailability" style="background: hsl(var(--secondary)); border: 1px solid hsl(var(--border)); border-radius: 0.5rem; padding: 1rem; margin-top: 1rem;">
+                                <p style="text-align: center; color: hsl(var(--muted-foreground)); margin: 0;">Select a date to see mechanic availability</p>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                            <button type="button" id="clearBtn" 
+                                    style="padding: 0.75rem 1.5rem; background: hsl(var(--secondary)); color: hsl(var(--secondary-foreground)); border: 1px solid hsl(var(--border)); border-radius: 0.5rem; cursor: pointer; font-size: 1rem;">
+                                Clear Form
+                            </button>
+                            <button type="submit" id="submitBtn" class="submit-button"
+                                    style="padding: 0.75rem 2rem; background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); border: none; border-radius: 0.5rem; cursor: pointer; font-size: 1rem; font-weight: 600;">
+                                Book Appointment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 1000;">
+        <div style="background: hsl(var(--card)); padding: 2rem; border-radius: 1rem; text-align: center;">
+            <div class="loading-spinner" style="width: 40px; height: 40px; border: 4px solid hsl(var(--border)); border-top: 4px solid hsl(var(--primary)); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+            <p>Processing your appointment...</p>
+        </div>
+    </div>
+
+    <script src="js/booking.js"></script>
+</body>
+</html>

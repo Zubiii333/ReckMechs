@@ -1,0 +1,19 @@
+{
+    "name": "car-workshop/appointment-system",
+    "description": "Car Workshop Appointment Management System",
+    "type": "project",
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "CarWorkshop\\": "backend/"
+        }
+    },
+    "scripts": {
+        "serve": "php -S localhost:8081 -t . backend/server.php"
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}

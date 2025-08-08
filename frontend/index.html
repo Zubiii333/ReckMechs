@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReckMechs - Book Your Appointment</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                </svg>
+                <span class="brand-name">ReckMechs</span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#services" class="nav-link">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#booking" class="nav-link">About</a>
+                </li>
+            </ul>
+            <div class="nav-actions">
+                <a href="book.html" class="nav-book-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    <span>Book Now</span>
+                </a>
+            </div>
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">Professional Car Service & Repair</h1>
+                <p class="hero-subtitle">Book your appointment with our expert mechanics. Quality service, trusted by thousands of customers.</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">Expert Mechanics</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">1000+</span>
+                        <span class="stat-label">Happy Customers</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Support</span>
+                    </div>
+                </div>
+                <button class="cta-button" id="heroBookingBtn">Book Your Appointment</button>
+            </div>
+            <div class="hero-image">
+                <img src="images\hero.png" alt="Professional mechanic working on car engine" class="hero-img">
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="services-container">
+            <div class="section-header">
+                <h2 class="section-title">Our Services</h2>
+                <p class="section-subtitle">Comprehensive car care services by certified professionals</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M12 1v6m0 6v6"/>
+                            <path d="m15.14 8.86 4.24-4.24M4.62 19.38l4.24-4.24m0-8.48L4.62 4.62M19.38 19.38l-4.24-4.24"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-title">Engine Diagnostics</h3>
+                    <p class="service-description">Complete engine diagnostics and repair services by our experienced mechanics.</p>
+                    <div class="service-features">
+                        <span class="feature">Computer Diagnostics</span>
+                        <span class="feature">Performance Testing</span>
+                        <span class="feature">Expert Analysis</span>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="6"/>
+                            <circle cx="12" cy="12" r="2"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-title">Brake Service</h3>
+                    <p class="service-description">Brake inspection, pad replacement, and complete brake system maintenance.</p>
+                    <div class="service-features">
+                        <span class="feature">Brake Pads</span>
+                        <span class="feature">Disc Replacement</span>
+                        <span class="feature">Safety Check</span>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+                            <path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+                            <path d="M5 17h-2v-6l2-5h9l4 5h1a2 2 0 0 1 2 2v4h-2"/>
+                            <path d="M9 17v-6h4v6"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-title">Transmission Repair</h3>
+                    <p class="service-description">Professional transmission diagnostics, repair, and maintenance services.</p>
+                    <div class="service-features">
+                        <span class="feature">Fluid Change</span>
+                        <span class="feature">Repair Service</span>
+                        <span class="feature">Performance</span>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 2v6h.01L6 8.01"/>
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <path d="M21 11V9a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v2"/>
+                            <path d="M12 12l0 .01"/>
+                            <path d="M12 2v6"/>
+                            <path d="M12 18v4"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-title">Electrical Systems</h3>
+                    <p class="service-description">Battery replacement and electrical system diagnostics and repairs.</p>
+                    <div class="service-features">
+                        <span class="feature">Battery Service</span>
+                        <span class="feature">Wiring Repair</span>
+                        <span class="feature">System Check</span>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-title">General Maintenance</h3>
+                    <p class="service-description">Regular maintenance services to keep your vehicle running smoothly.</p>
+                    <div class="service-features">
+                        <span class="feature">Oil Change</span>
+                        <span class="feature">Filter Service</span>
+                        <span class="feature">Tune-up</span>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                            <line x1="9" y1="9" x2="9.01" y2="9"/>
+                            <line x1="15" y1="9" x2="15.01" y2="9"/>
+                        </svg>
+                    </div>
+                    <h3 class="service-title">Performance Tuning</h3>
+                    <p class="service-description">Advanced performance optimization and tuning services for enhanced vehicle performance.</p>
+                    <div class="service-features">
+                        <span class="feature">ECU Tuning</span>
+                        <span class="feature">Performance Parts</span>
+                        <span class="feature">Optimization</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Section -->
+    <section id="booking" class="booking">
+        <div class="container">
+            <div class="booking-content">
+                <h2 class="booking-title">Ready to Book Your Service?</h2>
+                <p class="booking-subtitle">Professional car service by expert mechanics</p>
+                <a href="book.html" class="booking-btn">Book Appointment</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>ReckMechs</h3>
+                    <p>Your trusted partner for professional car service and repair.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p>📍 123 Workshop Street, City</p>
+                    <p>📞 (555) 123-4567</p>
+                    <p>✉️ info@reckmechs.com</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Business Hours</h4>
+                    <p>Monday - Friday: 8:00 AM - 6:00 PM</p>
+                    <p>Saturday: 8:00 AM - 4:00 PM</p>
+                    <p>Sunday: Closed</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ReckMechs. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="js/booking.js"></script>
+</body>
+</html>

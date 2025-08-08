@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ReckMechs</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--secondary)) 100%);
+            min-height: 100vh;
+        }
+
+        /* Modern Navigation */
+        .admin-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid hsl(var(--border));
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px hsl(var(--foreground) / 0.1);
+        }
+
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 4rem;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: hsl(var(--foreground));
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .nav-brand svg {
+            width: 24px;
+            height: 24px;
+            color: hsl(var(--primary));
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            color: hsl(var(--muted-foreground));
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: hsl(var(--accent));
+            color: hsl(var(--foreground));
+        }
+
+        /* Main Container */
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 2rem 2rem;
+            min-height: 100vh;
+        }
+
+        /* Modern Header */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: hsl(var(--card));
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px hsl(var(--foreground) / 0.1);
+            border: 1px solid hsl(var(--border));
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .admin-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: hsl(var(--foreground));
+            margin: 0;
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary)) 60%, hsl(var(--accent-foreground)));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .admin-subtitle {
+            color: hsl(var(--muted-foreground));
+            font-size: 0.95rem;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary)) 80%);
+            color: hsl(var(--primary-foreground));
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 12px hsl(var(--primary) / 0.3);
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px hsl(var(--primary) / 0.4);
+        }
+
+        .refresh-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: hsl(var(--card));
+            padding: 1.5rem;
+            border-radius: 1rem;
+            border: 1px solid hsl(var(--border));
+            box-shadow: 0 2px 10px hsl(var(--foreground) / 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px hsl(var(--foreground) / 0.15);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-title {
+            font-size: 0.875rem;
+            color: hsl(var(--muted-foreground));
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: hsl(var(--foreground));
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-change {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .stat-change.positive {
+            color: hsl(142 76% 36%);
+        }
+
+        .stat-change.neutral {
+            color: hsl(var(--muted-foreground));
+        }
+
+        /* Modern Table */
+        .appointments-section {
+            background: hsl(var(--card));
+            border: 1px solid hsl(var(--border));
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 20px hsl(var(--foreground) / 0.1);
+        }
+
+        .section-header {
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--muted)));
+            border-bottom: 1px solid hsl(var(--border));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: hsl(var(--foreground));
+            margin: 0;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .table-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid hsl(var(--border));
+            background: hsl(var(--background));
+            color: hsl(var(--foreground));
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .table-btn:hover {
+            background: hsl(var(--accent));
+        }
+
+        .appointments-table-container {
+            overflow-x: auto;
+            max-height: 60vh;
+        }
+
+        .appointments-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .appointments-table th {
+            background: hsl(var(--muted));
+            color: hsl(var(--foreground));
+            font-weight: 600;
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid hsl(var(--border));
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .appointments-table td {
+            padding: 1rem;
+            border-bottom: 1px solid hsl(var(--border));
+            vertical-align: middle;
+        }
+
+        .appointments-table tr {
+            transition: all 0.2s ease;
+        }
+
+        .appointments-table tr:hover {
+            background-color: hsl(var(--accent));
+        }
+
+        .appointment-row.editing {
+            background: linear-gradient(135deg, hsl(var(--primary) / 0.05), hsl(var(--primary) / 0.1));
+            border-left: 4px solid hsl(var(--primary));
+        }
+
+        /* Modern Form Elements */
+        .editable-field, .editable-select {
+            background: transparent;
+            border: 1px solid transparent;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.9rem;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .editable-field:focus, .editable-select:focus {
+            outline: none;
+            border-color: hsl(var(--primary));
+            background: hsl(var(--background));
+            box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+        }
+
+        /* Modern Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .edit-btn, .save-btn, .cancel-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .edit-btn {
+            background: hsl(var(--secondary));
+            color: hsl(var(--secondary-foreground));
+            border: 1px solid hsl(var(--border));
+        }
+
+        .edit-btn:hover {
+            background: hsl(var(--accent));
+            transform: translateY(-1px);
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 76% 30%));
+            color: white;
+            box-shadow: 0 2px 8px hsl(142 76% 36% / 0.3);
+        }
+
+        .save-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px hsl(142 76% 36% / 0.4);
+        }
+
+        .cancel-btn {
+            background: linear-gradient(135deg, hsl(var(--destructive)), hsl(var(--destructive)) 80%);
+            color: hsl(var(--destructive-foreground));
+            box-shadow: 0 2px 8px hsl(var(--destructive) / 0.3);
+        }
+
+        .cancel-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px hsl(var(--destructive) / 0.4);
+        }
+
+        /* Modern Status Badge */
+        .status-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .status-confirmed {
+            background: linear-gradient(135deg, hsl(142 76% 36% / 0.1), hsl(142 76% 36% / 0.2));
+            color: hsl(142 76% 36%);
+            border: 1px solid hsl(142 76% 36% / 0.2);
+        }
+
+        /* Modern Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: hsl(var(--muted-foreground));
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+            filter: grayscale(0.3);
+        }
+
+        .empty-state-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: hsl(var(--foreground));
+        }
+
+        .empty-state-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Modern Loading */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-content {
+            background: hsl(var(--card));
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            box-shadow: 0 20px 40px hsl(var(--foreground) / 0.3);
+            border: 1px solid hsl(var(--border));
+        }
+
+        /* Modern Messages */
+        .error-message, .success-message {
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, hsl(var(--destructive) / 0.1), hsl(var(--destructive) / 0.05));
+            color: hsl(var(--destructive));
+            border: 1px solid hsl(var(--destructive) / 0.2);
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, hsl(142 76% 36% / 0.1), hsl(142 76% 36% / 0.05));
+            color: hsl(142 76% 36%);
+            border: 1px solid hsl(142 76% 36% / 0.2);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 5rem 1rem 2rem;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+                text-align: left;
+            }
+
+            .admin-title {
+                font-size: 1.75rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .appointments-table {
+                font-size: 0.8rem;
+            }
+
+            .appointments-table th,
+            .appointments-table td {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .edit-btn, .save-btn, .cancel-btn {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.75rem;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Modern Navigation -->
+    <nav class="admin-nav">
+        <div class="nav-content">
+            <a href="index.html" class="nav-brand">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                </svg>
+                ReckMechs
+            </a>
+            <div class="nav-actions">
+                <a href="book.html" class="nav-link">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    Book Appointment
+                </a>
+                <a href="index.html" class="nav-link">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9,22 9,12 15,12 15,22"/>
+                    </svg>
+                    Home
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <!-- Modern Header -->
+        <div class="admin-header">
+            <div class="header-content">
+                <h1 class="admin-title">Admin Dashboard</h1>
+                <p class="admin-subtitle">Manage appointments and workshop operations</p>
+            </div>
+            <div class="admin-actions">
+                <button class="refresh-btn" id="refreshBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                        <path d="M21 3v5h-5"/>
+                        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                        <path d="M3 21v-5h5"/>
+                    </svg>
+                    Refresh Data
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Total Appointments</span>
+                    <div class="stat-icon" style="background: hsl(var(--primary) / 0.1); color: hsl(var(--primary));">
+                        📅
+                    </div>
+                </div>
+                <div class="stat-value" id="totalAppointments">0</div>
+                <div class="stat-change neutral">Loading...</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Today's Appointments</span>
+                    <div class="stat-icon" style="background: hsl(142 76% 36% / 0.1); color: hsl(142 76% 36%);">
+                        📋
+                    </div>
+                </div>
+                <div class="stat-value" id="todayAppointments">0</div>
+                <div class="stat-change positive">+0 from yesterday</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Available Mechanics</span>
+                    <div class="stat-icon" style="background: hsl(45 93% 47% / 0.1); color: hsl(45 93% 47%);">
+                        👨‍🔧
+                    </div>
+                </div>
+                <div class="stat-value" id="availableMechanics">5</div>
+                <div class="stat-change neutral">All active</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <span class="stat-title">Pending Reviews</span>
+                    <div class="stat-icon" style="background: hsl(var(--destructive) / 0.1); color: hsl(var(--destructive));">
+                        ⏳
+                    </div>
+                </div>
+                <div class="stat-value" id="pendingReviews">0</div>
+                <div class="stat-change neutral">All up to date</div>
+            </div>
+        </div>
+
+        <!-- Messages Area -->
+        <div id="messagesArea"></div>
+
+        <!-- Add Mechanic Section -->
+        <div class="appointments-section" style="margin-bottom: 2rem;">
+            <div class="section-header">
+                <h2 class="section-title">Add New Mechanic</h2>
+                <div class="table-actions">
+                    <button class="table-btn" onclick="toggleAddMechanicForm()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Add Mechanic
+                    </button>
+                </div>
+            </div>
+            
+            <div id="addMechanicForm" style="display: none; padding: 2rem;">
+                <form id="mechanicForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 600px;">
+                    <div>
+                        <label for="mechanicName" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Mechanic Name:</label>
+                        <input type="text" id="mechanicName" name="name" required 
+                               style="width: 100%; padding: 0.75rem; border: 1px solid hsl(var(--border)); border-radius: 0.5rem; font-size: 1rem;">
+                    </div>
+                    <div>
+                        <label for="mechanicSpecialization" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Specialization:</label>
+                        <input type="text" id="mechanicSpecialization" name="specialization" required 
+                               style="width: 100%; padding: 0.75rem; border: 1px solid hsl(var(--border)); border-radius: 0.5rem; font-size: 1rem;">
+                    </div>
+                    <div style="grid-column: 1 / -1; display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button type="submit" class="save-btn" style="padding: 0.75rem 1.5rem;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20,6 9,17 4,12"/>
+                            </svg>
+                            Add Mechanic
+                        </button>
+                        <button type="button" class="cancel-btn" onclick="toggleAddMechanicForm()" style="padding: 0.75rem 1.5rem;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modern Appointments Table -->
+        <div class="appointments-section">
+            <div class="section-header">
+                <h2 class="section-title">Appointment Management</h2>
+                <div class="table-actions">
+                    <button class="table-btn" onclick="exportData()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7,10 12,15 17,10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Export
+                    </button>
+                </div>
+            </div>
+            
+            <div class="appointments-table-container">
+                <table class="appointments-table" id="appointmentsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Client Name</th>
+                            <th>Phone</th>
+                            <th>Car Registration</th>
+                            <th>Car Engine</th>
+                            <th>Date</th>
+                            <th>Mechanic</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appointmentsTableBody">
+                        <!-- Appointments will be loaded here -->
+                    </tbody>
+                </table>
+                
+                <!-- Modern Empty State -->
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <div class="empty-state-icon">🚗</div>
+                    <h3 class="empty-state-title">No Appointments Yet</h3>
+                    <p class="empty-state-description">
+                        When customers book appointments, they'll appear here for you to manage and track.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modern Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>Loading appointments...</p>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
