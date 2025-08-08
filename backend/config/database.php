@@ -4,8 +4,14 @@
  * Car Workshop Appointment System - Single Database File
  */
 
-// Database path
+// Database path - Railway compatible
 $db_path = __DIR__ . '/workshop.db';
+
+// For Railway deployment, ensure directory is writable
+if (!is_writable(dirname($db_path))) {
+    // Fallback to tmp directory if current directory is not writable
+    $db_path = sys_get_temp_dir() . '/workshop.db';
+}
 
 // Connect to SQLite database
 try {
