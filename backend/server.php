@@ -52,6 +52,16 @@ if (strpos($request_uri, '/backend/api/') === 0) {
             require_once __DIR__ . '/api/add_mechanic.php';
             break;
             
+        case 'update_mechanic.php':
+        case 'update_mechanic':
+            require_once __DIR__ . '/api/update_mechanic.php';
+            break;
+            
+        case 'get_all_mechanics.php':
+        case 'get_all_mechanics':
+            require_once __DIR__ . '/api/get_all_mechanics.php';
+            break;
+            
         default:
             header('Content-Type: application/json');
             http_response_code(404);

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Appointment - ReckMechs</title>
-    <link rel="stylesheet" href="css/style.css?v=2024010802">
+    <link rel="stylesheet" href="css/style.css?v=2024010803">
 </head>
 <body>
     <!-- Navigation -->
@@ -86,20 +86,25 @@
                         <!-- Appointment Details -->
                         <div style="margin-bottom: 2rem;">
                             <h2 style="margin-bottom: 1rem; color: var(--foreground); font-size: 1.5rem;">Appointment Details</h2>
-                            <div style="margin-bottom: 1rem;">
-                                <label for="appointmentDate" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Appointment Date *</label>
-                                <input type="date" id="appointmentDate" name="appointmentDate" required class="form-input">
-                                <span class="error-message" id="appointmentDateError" style="color: var(--destructive); font-size: 0.875rem; display: none;"></span>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                                <div>
+                                    <label for="appointmentDate" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Appointment Date *</label>
+                                    <input type="date" id="appointmentDate" name="appointmentDate" required class="form-input">
+                                    <span class="error-message" id="appointmentDateError" style="color: var(--destructive); font-size: 0.875rem; display: none;"></span>
+                                </div>
+                                <div>
+                                    <label for="mechanicSelect" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Select Mechanic *</label>
+                                    <select id="mechanicSelect" name="mechanicId" required class="form-input">
+                                        <option value="">Choose a mechanic...</option>
+                                    </select>
+                                    <span class="error-message" id="mechanicSelectError" style="color: var(--destructive); font-size: 0.875rem; display: none;"></span>
+                                </div>
                             </div>
                             
                             <!-- Mechanic Availability Display -->
-                            <div id="mechanicAvailability" style="background: var(--secondary); border: 2px solid var(--border); border-radius: 0.5rem; padding: 1.5rem; margin-top: 1rem;">
-                                <p style="text-align: center; color: var(--muted-foreground); margin: 0;">Select a date to see available mechanics</p>
+                            <div id="mechanicAvailability" style="background: var(--secondary); border: 2px solid var(--border); border-radius: 0.5rem; padding: 1rem; margin-top: 1rem;">
+                                <p style="text-align: center; color: var(--muted-foreground); margin: 0;">Select a date to see mechanic availability</p>
                             </div>
-                            
-                            <!-- Hidden mechanic selection -->
-                            <input type="hidden" id="mechanicSelect" name="mechanicId" required>
-                            <span class="error-message" id="mechanicSelectError" style="color: var(--destructive); font-size: 0.875rem; display: none;"></span>
                         </div>
 
                         <!-- Form Actions -->

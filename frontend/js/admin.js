@@ -14,6 +14,7 @@ class AdminPanel {
         this.bindEvents();
         this.loadMechanics();
         this.loadAppointments();
+        this.loadAllMechanics();
     }
 
     bindEvents() {
@@ -48,29 +49,8 @@ class AdminPanel {
     }
 
     showMessage(message, type = 'info') {
-        const messagesArea = document.getElementById('messagesArea');
-        if (!messagesArea) return;
-
-        const messageDiv = document.createElement('div');
-        messageDiv.className = type === 'error' ? 'error-message' : 'success-message';
-
-        // Add appropriate icon
-        const icon = type === 'error' ? '❌' : '✅';
-        messageDiv.innerHTML = `${icon} ${message}`;
-
-        messagesArea.innerHTML = '';
-        messagesArea.appendChild(messageDiv);
-
-        // Auto-hide after appropriate time
-        const hideTimeout = type === 'success' ? 4000 : 6000;
-        setTimeout(() => {
-            if (messageDiv.parentNode) {
-                messageDiv.parentNode.removeChild(messageDiv);
-            }
-        }, hideTimeout);
-
-        // Scroll to top to ensure message is visible
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Messages are now handled silently - no UI feedback
+        console.log(`${type.toUpperCase()}: ${message}`);
     }
 
     async loadMechanics() {
@@ -163,32 +143,19 @@ class AdminPanel {
 
         // Update stats after rendering appointments
         this.updateStats();
+        this.renderMechanics();
     }
 
     updateStats() {
         const totalAppointments = document.getElementById('totalAppointments');
-        const todayAppointments = document.getElementById('todayAppointments');
         const availableMechanics = document.getElementById('availableMechanics');
-        const pendingReviews = document.getElementById('pendingReviews');
 
         if (totalAppointments) {
             totalAppointments.textContent = this.appointments.length;
         }
 
-        if (todayAppointments) {
-            const today = new Date().toISOString().split('T')[0];
-            const todayCount = this.appointments.filter(apt => apt.appointment_date === today).length;
-            todayAppointments.textContent = todayCount;
-        }
-
         if (availableMechanics) {
             availableMechanics.textContent = this.mechanics.length || 5;
-        }
-
-        if (pendingReviews) {
-            // Count appointments that might need review (you can customize this logic)
-            const pendingCount = this.appointments.filter(apt => apt.status === 'pending').length;
-            pendingReviews.textContent = pendingCount;
         }
     }
 
@@ -765,6 +732,237 @@ class AdminPanel {
                 }
             }
         }
+    }
+    async loadAllMechanics() {
+        try {
+            const response = await fetch('./backend/api/get_all_mechanics.php');
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    this.mechanics = data.mechanics || [];
+                    this.renderMechanics();
+                }
+            }
+        } catch (error) {
+            console.error('Error loading mechanics:', error);
+        }
+    }
+
+    renderMechanics() {
+        const tableBody = document.getElementById('mechanicsTableBody');
+        const emptyState = document.getElementById('mechanicsEmptyState');
+
+        if (!tableBody) return;
+
+        if (this.mechanics.length === 0) {
+            tableBody.innerHTML = '';
+            if (emptyState) emptyState.style.display = 'block';
+            return;
+        }
+
+        if (emptyState) emptyState.style.display = 'none';
+
+        tableBody.innerHTML = '';
+        this.mechanics.forEach(mechanic => {
+            const row = this.createMechanicRow(mechanic);
+            tableBody.appendChild(row);
+        });
+    }
+
+    createMechanicRow(mechanic) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${mechanic.id}</td>
+            <td>${mechanic.name}</td>
+            <td>${mechanic.specialization || 'General'}</td>
+            <td>
+                <span class="status-badge status-confirmed">Active</span>
+            </td>
+            <td>
+                <div class="action-buttons">
+                    <button class="edit-btn" onclick="adminPanel.editMechanic(${mechanic.id})">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                        Edit
+                    </button>
+                </div>
+            </td>
+        `;
+        return row;
+    }
+
+    editMechanic(mechanicId) {
+        // Find the mechanic row and make it editable
+        const rows = document.querySelectorAll('#mechanicsTableBody tr');
+        rows.forEach(row => {
+            const firstCell = row.cells[0];
+            if (firstCell && firstCell.textContent == mechanicId) {
+                this.makeRowEditable(row, mechanicId, 'mechanic');
+            }
+        });
+    }
+
+    makeRowEditable(row, id, type) {
+        if (this.editingRow) {
+            this.cancelEdit();
+        }
+
+        this.editingRow = row;
+        this.originalData = {
+            name: row.cells[1].textContent,
+            specialization: row.cells[2].textContent
+        };
+
+        row.classList.add('appointment-row', 'editing');
+
+        // Make name editable
+        row.cells[1].innerHTML = `<input type="text" class="editable-field" value="${this.originalData.name}">`;
+        
+        // Make specialization editable
+        row.cells[2].innerHTML = `<input type="text" class="editable-field" value="${this.originalData.specialization}">`;
+
+        // Update action buttons
+        row.cells[4].innerHTML = `
+            <div class="action-buttons">
+                <button class="save-btn" onclick="adminPanel.saveMechanicEdit(${id})">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20,6 9,17 4,12"/>
+                    </svg>
+                    Save
+                </button>
+                <button class="cancel-btn" onclick="adminPanel.cancelEdit()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                    Cancel
+                </button>
+            </div>
+        `;
+    }
+
+    async saveMechanicEdit(mechanicId) {
+        if (!this.editingRow) return;
+
+        const nameInput = this.editingRow.cells[1].querySelector('input');
+        const specializationInput = this.editingRow.cells[2].querySelector('input');
+
+        const updatedData = {
+            id: mechanicId,
+            name: nameInput.value.trim(),
+            specialization: specializationInput.value.trim()
+        };
+
+        try {
+            const formData = new FormData();
+            formData.append('id', updatedData.id);
+            formData.append('name', updatedData.name);
+            formData.append('specialization', updatedData.specialization);
+
+            const response = await fetch('./backend/api/update_mechanic.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    // Update the row with new data
+                    this.editingRow.cells[1].textContent = updatedData.name;
+                    this.editingRow.cells[2].textContent = updatedData.specialization;
+                    
+                    // Reset the action buttons
+                    this.editingRow.cells[4].innerHTML = `
+                        <div class="action-buttons">
+                            <button class="edit-btn" onclick="adminPanel.editMechanic(${mechanicId})">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                                Edit
+                            </button>
+                        </div>
+                    `;
+
+                    this.editingRow.classList.remove('appointment-row', 'editing');
+                    this.editingRow = null;
+                    this.originalData = null;
+
+                    // Reload mechanics data
+                    await this.loadAllMechanics();
+                }
+            }
+        } catch (error) {
+            console.error('Error updating mechanic:', error);
+            this.cancelEdit();
+        }
+    }
+
+    cancelEdit() {
+        if (!this.editingRow) return;
+
+        // Restore original data
+        this.editingRow.cells[1].textContent = this.originalData.name;
+        this.editingRow.cells[2].textContent = this.originalData.specialization;
+
+        // Reset action buttons based on type
+        const mechanicId = this.editingRow.cells[0].textContent;
+        this.editingRow.cells[4].innerHTML = `
+            <div class="action-buttons">
+                <button class="edit-btn" onclick="adminPanel.editMechanic(${mechanicId})">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                    Edit
+                </button>
+            </div>
+        `;
+
+        this.editingRow.classList.remove('appointment-row', 'editing');
+        this.editingRow = null;
+        this.originalData = null;
+    }
+
+    async handleAddMechanic(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(e.target);
+        
+        try {
+            const response = await fetch('./backend/api/add_mechanic.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    // Reset form
+                    e.target.reset();
+                    
+                    // Hide form
+                    const addForm = document.getElementById('addMechanicForm');
+                    if (addForm) addForm.style.display = 'none';
+                    
+                    // Reload mechanics
+                    await this.loadAllMechanics();
+                    this.updateStats();
+                }
+            }
+        } catch (error) {
+            console.error('Error adding mechanic:', error);
+        }
+    }
+}
+
+// Toggle add mechanic form
+function toggleAddMechanicForm() {
+    const form = document.getElementById('addMechanicForm');
+    if (form) {
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
     }
 }
 

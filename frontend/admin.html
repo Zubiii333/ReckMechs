@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - ReckMechs</title>
-    <link rel="stylesheet" href="css/style.css?v=2024010802">
+    <link rel="stylesheet" href="css/style.css?v=2024010804">
     <style>
         body {
             background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--secondary)) 100%);
@@ -149,9 +149,12 @@
         /* Stats Cards */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
             margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .stat-card {
@@ -568,8 +571,13 @@
             <div class="stat-card">
                 <div class="stat-header">
                     <span class="stat-title">Total Appointments</span>
-                    <div class="stat-icon" style="background: hsl(var(--primary) / 0.1); color: hsl(var(--primary));">
-                        📅
+                    <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--primary);">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
                     </div>
                 </div>
                 <div class="stat-value" id="totalAppointments">0</div>
@@ -577,82 +585,22 @@
             </div>
             <div class="stat-card">
                 <div class="stat-header">
-                    <span class="stat-title">Today's Appointments</span>
-                    <div class="stat-icon" style="background: hsl(142 76% 36% / 0.1); color: hsl(142 76% 36%);">
-                        📋
-                    </div>
-                </div>
-                <div class="stat-value" id="todayAppointments">0</div>
-                <div class="stat-change positive">+0 from yesterday</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-header">
                     <span class="stat-title">Available Mechanics</span>
-                    <div class="stat-icon" style="background: hsl(45 93% 47% / 0.1); color: hsl(45 93% 47%);">
-                        👨‍🔧
+                    <div class="stat-icon" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                        </svg>
                     </div>
                 </div>
                 <div class="stat-value" id="availableMechanics">5</div>
                 <div class="stat-change neutral">All active</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-header">
-                    <span class="stat-title">Pending Reviews</span>
-                    <div class="stat-icon" style="background: hsl(var(--destructive) / 0.1); color: hsl(var(--destructive));">
-                        ⏳
-                    </div>
-                </div>
-                <div class="stat-value" id="pendingReviews">0</div>
-                <div class="stat-change neutral">All up to date</div>
             </div>
         </div>
 
         <!-- Messages Area -->
         <div id="messagesArea"></div>
 
-        <!-- Add Mechanic Section -->
-        <div class="appointments-section" style="margin-bottom: 2rem;">
-            <div class="section-header">
-                <h2 class="section-title">Add New Mechanic</h2>
-                <div class="table-actions">
-                    <button class="table-btn" onclick="toggleAddMechanicForm()">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <line x1="12" y1="5" x2="12" y2="19"/>
-                            <line x1="5" y1="12" x2="19" y2="12"/>
-                        </svg>
-                        Add Mechanic
-                    </button>
-                </div>
-            </div>
-            
-            <div id="addMechanicForm" style="display: none; padding: 2rem;">
-                <form id="mechanicForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 600px;">
-                    <div>
-                        <label for="mechanicName" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Mechanic Name:</label>
-                        <input type="text" id="mechanicName" name="name" required class="form-input">
-                    </div>
-                    <div>
-                        <label for="mechanicSpecialization" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Specialization:</label>
-                        <input type="text" id="mechanicSpecialization" name="specialization" required class="form-input">
-                    </div>
-                    <div style="grid-column: 1 / -1; display: flex; gap: 1rem; margin-top: 1rem;">
-                        <button type="submit" class="save-btn" style="padding: 0.75rem 1.5rem;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <polyline points="20,6 9,17 4,12"/>
-                            </svg>
-                            Add Mechanic
-                        </button>
-                        <button type="button" class="cancel-btn" onclick="toggleAddMechanicForm()" style="padding: 0.75rem 1.5rem;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="18" y1="6" x2="6" y2="18"/>
-                                <line x1="6" y1="6" x2="18" y2="18"/>
-                            </svg>
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+
 
         <!-- Modern Appointments Table -->
         <div class="appointments-section">
@@ -700,13 +648,89 @@
                 </div>
             </div>
         </div>
+
+        <!-- Mechanics Management Section -->
+        <div class="appointments-section" style="margin-top: 2rem;">
+            <div class="section-header">
+                <h2 class="section-title">All Mechanics</h2>
+                <div class="table-actions">
+                    <button class="table-btn" onclick="toggleAddMechanicForm()">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Add Mechanic
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Add Mechanic Form -->
+            <div id="addMechanicForm" style="display: none; padding: 2rem; border-bottom: 2px solid var(--border);">
+                <form id="mechanicForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 600px;">
+                    <div>
+                        <label for="mechanicName" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Mechanic Name:</label>
+                        <input type="text" id="mechanicName" name="name" required class="form-input">
+                    </div>
+                    <div>
+                        <label for="mechanicSpecialization" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Specialization:</label>
+                        <input type="text" id="mechanicSpecialization" name="specialization" required class="form-input">
+                    </div>
+                    <div style="grid-column: 1 / -1; display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button type="submit" class="save-btn" style="padding: 0.75rem 1.5rem;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20,6 9,17 4,12"/>
+                            </svg>
+                            Add Mechanic
+                        </button>
+                        <button type="button" class="cancel-btn" onclick="toggleAddMechanicForm()" style="padding: 0.75rem 1.5rem;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Mechanics List -->
+            <div class="appointments-table-container">
+                <table class="appointments-table" id="mechanicsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Specialization</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mechanicsTableBody">
+                        <!-- Mechanics will be loaded here -->
+                    </tbody>
+                </table>
+                
+                <!-- Empty State for Mechanics -->
+                <div class="empty-state" id="mechanicsEmptyState" style="display: none;">
+                    <div class="empty-state-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--muted-foreground);">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                        </svg>
+                    </div>
+                    <h3 class="empty-state-title">No Mechanics Yet</h3>
+                    <p class="empty-state-description">
+                        Add mechanics to your workshop to start managing appointments and services.
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modern Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay" style="display: none;">
         <div class="loading-content">
             <div class="loading-spinner"></div>
-            <p>Loading appointments...</p>
+            <p>Loading data...</p>
         </div>
     </div>
 

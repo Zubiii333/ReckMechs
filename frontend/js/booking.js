@@ -125,9 +125,9 @@ class BookingSystem {
 
         // Show loading
         mechanicAvailability.innerHTML = `
-            <div style="text-align: center; padding: 1rem;">
-                <div class="loading-spinner" style="width: 24px; height: 24px; border: 2px solid hsl(var(--border)); border-top: 2px solid hsl(var(--primary)); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 0.5rem;"></div>
-                <p style="margin: 0; color: hsl(var(--muted-foreground));">Loading mechanic availability...</p>
+            <div style="text-align: center; padding: 2rem;">
+                <div class="loading-spinner" style="width: 32px; height: 32px; border: 3px solid var(--border); border-top: 3px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+                <p style="margin: 0; color: var(--muted-foreground); font-weight: 500;">Loading mechanic availability...</p>
             </div>
         `;
 
@@ -197,6 +197,9 @@ class BookingSystem {
         const mechanicSelect = document.getElementById('mechanicSelect');
         const mechanicAvailability = document.getElementById('mechanicAvailability');
 
+        // Clear and populate select dropdown
+        mechanicSelect.innerHTML = '<option value="">Choose a mechanic...</option>';
+
         // Sort by availability (available first)
         const sortedMechanics = mechanics.sort((a, b) => {
             if (a.available_slots === 0 && b.available_slots > 0) return 1;
@@ -204,7 +207,20 @@ class BookingSystem {
             return b.available_slots - a.available_slots;
         });
 
-        // Requirement 2.1: Show mechanic availability with slot count
+        // Add mechanics to dropdown
+        sortedMechanics.forEach(mechanic => {
+            const option = document.createElement('option');
+            option.value = mechanic.id;
+            if (mechanic.available_slots > 0) {
+                option.textContent = `${mechanic.name} (${mechanic.available_slots}/4 slots available)`;
+            } else {
+                option.textContent = `${mechanic.name} (Fully Booked)`;
+                option.disabled = true;
+            }
+            mechanicSelect.appendChild(option);
+        });
+
+        // Show availability summary
         const availableMechanics = mechanics.filter(m => m.available_slots > 0);
         const formattedDate = new Date(selectedDate).toLocaleDateString('en-US', {
             weekday: 'long',
@@ -214,122 +230,76 @@ class BookingSystem {
         });
 
         let html = `
-            <div style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border);">
-                <h4 style="margin: 0 0 0.5rem 0; color: var(--foreground);">Available Mechanics for ${formattedDate}</h4>
-                <div style="display: flex; gap: 1rem; font-size: 0.875rem;">
-                    <span style="padding: 0.25rem 0.5rem; background: var(--secondary); border-radius: 0.25rem;">
-                        ${mechanics.length} mechanics total
-                    </span>
-                    <span style="padding: 0.25rem 0.5rem; background: rgba(34, 197, 94, 0.1); color: #22c55e; border-radius: 0.25rem;">
-                        ${availableMechanics.length} available
-                    </span>
+            <div style="padding: 1.5rem;">
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <h4 style="margin: 0 0 0.5rem 0; color: var(--foreground); font-size: 1.1rem;">Availability for ${formattedDate}</h4>
+                    <div style="display: inline-flex; gap: 0.5rem; font-size: 0.875rem;">
+                        <span style="padding: 0.25rem 0.75rem; background: var(--muted); color: var(--muted-foreground); border-radius: 1rem; font-weight: 500;">
+                            ${mechanics.length} total
+                        </span>
+                        <span style="padding: 0.25rem 0.75rem; background: rgba(34, 197, 94, 0.1); color: #22c55e; border-radius: 1rem; font-weight: 500;">
+                            ${availableMechanics.length} available
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
         `;
 
         if (availableMechanics.length === 0) {
             html += `
-                <div style="text-align: center; padding: 2rem; background: rgba(239, 68, 68, 0.1); border: 2px solid rgba(239, 68, 68, 0.2); border-radius: 0.5rem;">
-                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">😔</div>
-                    <h4 style="margin: 0 0 0.5rem 0; color: var(--destructive);">No mechanics available</h4>
-                    <p style="margin: 0; color: var(--muted-foreground); font-size: 0.875rem;">
-                        All mechanics are fully booked on this date. Please choose a different date.
-                    </p>
+                <div style="text-align: center; padding: 1.5rem; background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.15); border-radius: 0.75rem;">
+                    <div style="width: 48px; height: 48px; background: rgba(239, 68, 68, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--destructive);">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="15" y1="9" x2="9" y2="15"/>
+                            <line x1="9" y1="9" x2="15" y2="15"/>
+                        </svg>
+                    </div>
+                    <h5 style="margin: 0 0 0.5rem 0; color: var(--destructive); font-weight: 600;">No mechanics available</h5>
+                    <p style="margin: 0; color: var(--muted-foreground); font-size: 0.875rem; line-height: 1.4;">All mechanics are fully booked on this date. Please choose a different date to see available options.</p>
                 </div>
             `;
         } else {
+            html += `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
+            `;
+            
             sortedMechanics.forEach(mechanic => {
-                // Requirement 2.2: Mark mechanic as unavailable when they have 4 appointments (0 available)
-                let statusClass = 'unavailable';
-                let statusText = 'Fully Booked (0/4 available)';
-                let statusIcon = '❌';
-
-                if (mechanic.available_slots > 0) {
-                    statusClass = mechanic.available_slots >= 3 ? 'available' : 'limited';
-                    statusText = `${mechanic.available_slots}/4 slots available`;
-                    statusIcon = mechanic.available_slots >= 3 ? '✅' : '⚠️';
-                }
-
-                const isClickable = mechanic.available_slots > 0;
-                const cursorStyle = isClickable ? 'cursor: pointer;' : 'cursor: not-allowed; opacity: 0.6;';
-
+                const isAvailable = mechanic.available_slots > 0;
+                const statusColor = isAvailable ? '#22c55e' : '#ef4444';
+                const bgColor = isAvailable ? 'rgba(34, 197, 94, 0.05)' : 'rgba(239, 68, 68, 0.05)';
+                const borderColor = isAvailable ? 'rgba(34, 197, 94, 0.15)' : 'rgba(239, 68, 68, 0.15)';
+                
                 html += `
-                    <div class="mechanic-item" data-mechanic-id="${mechanic.id}" 
-                         style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--card); border: 2px solid var(--border); border-radius: 0.75rem; transition: all 0.2s ease; ${cursorStyle}"
-                         ${isClickable ? `onclick="bookingSystem.selectMechanic(${mechanic.id}, '${mechanic.name}')"` : ''}
-                         ${isClickable ? `onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.15)'"` : ''}
-                         ${isClickable ? `onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)'; this.style.boxShadow='none'"` : ''}>
-                        <div>
-                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
-                                <span style="font-weight: 600; color: var(--foreground); font-size: 1.1rem;">${mechanic.name}</span>
-                                <span style="font-size: 1.25rem;">${statusIcon}</span>
-                            </div>
-                            <div style="font-size: 0.875rem; color: var(--muted-foreground);">
-                                ${isClickable ? 'Click to select this mechanic' : 'Not available on this date'}
-                            </div>
-                        </div>
-                        <div>
-                            <span style="padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; 
-                                         ${statusClass === 'available' ? 'background: rgba(34, 197, 94, 0.1); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.2);' : 
-                                           statusClass === 'limited' ? 'background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2);' : 
-                                           'background: rgba(239, 68, 68, 0.1); color: var(--destructive); border: 1px solid rgba(239, 68, 68, 0.2);'}">
-                                ${statusText}
-                            </span>
+                    <div style="padding: 1rem; background: ${bgColor}; border: 1px solid ${borderColor}; border-radius: 0.5rem; text-align: center;">
+                        <div style="font-weight: 600; color: var(--foreground); margin-bottom: 0.5rem;">${mechanic.name}</div>
+                        <div style="font-size: 0.875rem; color: ${statusColor}; font-weight: 500;">
+                            ${isAvailable ? `${mechanic.available_slots}/4 slots available` : 'Fully Booked'}
                         </div>
                     </div>
                 `;
             });
+            
+            html += `
+                </div>
+                <div style="text-align: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border);">
+                    <p style="margin: 0; color: var(--muted-foreground); font-size: 0.875rem;">Select your preferred mechanic from the dropdown above</p>
+                </div>
+            `;
         }
 
-        html += `
-            </div>
-            <div style="text-align: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid var(--border);">
-                <button onclick="bookingSystem.loadMechanicAvailability('${selectedDate}')" 
-                        style="padding: 0.75rem 1.5rem; background: var(--secondary); border: 2px solid var(--border); border-radius: 0.5rem; cursor: pointer; font-size: 0.875rem; font-weight: 500; transition: all 0.2s ease;"
-                        onmouseover="this.style.background='var(--accent)'; this.style.borderColor='var(--primary)'"
-                        onmouseout="this.style.background='var(--secondary)'; this.style.borderColor='var(--border)'">
-                    🔄 Refresh Availability
-                </button>
-            </div>
-        `;
+        html += `</div>`;
 
         mechanicAvailability.innerHTML = html;
     }
 
-    selectMechanic(mechanicId, mechanicName) {
-        const mechanicSelect = document.getElementById('mechanicSelect');
-        mechanicSelect.value = mechanicId;
-        
-        // Clear any previous error
-        this.clearFieldError(mechanicSelect);
-        
-        // Show selection feedback
-        this.showMessage(`Selected ${mechanicName}`, 'success');
-        
-        // Highlight selected mechanic
-        this.highlightSelectedMechanic(mechanicId);
-    }
 
-    highlightSelectedMechanic(mechanicId) {
-        const mechanicItems = document.querySelectorAll('.mechanic-item');
-        mechanicItems.forEach(item => {
-            if (item.dataset.mechanicId === mechanicId.toString()) {
-                item.style.backgroundColor = 'hsl(var(--primary) / 0.1)';
-                item.style.borderColor = 'hsl(var(--primary))';
-            } else {
-                item.style.backgroundColor = 'hsl(var(--card))';
-                item.style.borderColor = 'hsl(var(--border))';
-            }
-        });
-    }
 
     clearMechanicAvailability() {
         const mechanicSelect = document.getElementById('mechanicSelect');
         const mechanicAvailability = document.getElementById('mechanicAvailability');
 
-        mechanicSelect.value = '';
-        mechanicAvailability.innerHTML = '<p style="text-align: center; color: var(--muted-foreground); margin: 0; padding: 2rem;">Select a date to see available mechanics</p>';
+        mechanicSelect.innerHTML = '<option value="">Choose a mechanic...</option>';
+        mechanicAvailability.innerHTML = '<p style="text-align: center; color: var(--muted-foreground); margin: 0;">Select a date to see mechanic availability</p>';
     }
 
     async handleSubmit(e) {
@@ -506,43 +476,27 @@ class BookingSystem {
         const mechanicAvailability = document.getElementById('mechanicAvailability');
         
         let errorMessage = 'Unable to load mechanic availability.';
-        let retryAction = () => this.loadMechanicAvailability(selectedDate);
-        let retryLabel = 'Retry';
         
         if (error.name === 'TypeError' && error.message.includes('fetch')) {
             errorMessage = 'Connection error. Please check your internet connection.';
-            retryLabel = 'Check Connection & Retry';
         } else if (error.message.includes('Server returned 500')) {
             errorMessage = 'Server error loading availability. Please try again in a moment.';
-            retryLabel = 'Retry in a Moment';
         } else if (error.message.includes('timeout')) {
             errorMessage = 'Request timed out. Please try again.';
-            retryLabel = 'Retry';
         }
 
         mechanicAvailability.innerHTML = `
-            <div style="text-align: center; padding: 1.5rem; background: hsl(var(--destructive) / 0.05); border: 1px solid hsl(var(--destructive) / 0.2); border-radius: 0.5rem;">
-                <div style="margin-bottom: 1rem;">
-                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚠️</div>
-                    <p style="margin: 0; color: hsl(var(--destructive)); font-weight: 500; margin-bottom: 0.5rem;">${errorMessage}</p>
-                    <p style="margin: 0; color: hsl(var(--muted-foreground)); font-size: 0.875rem;">
-                        You can still select a mechanic manually from the dropdown above.
-                    </p>
+            <div style="text-align: center; padding: 2rem; background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.15); border-radius: 0.75rem;">
+                <div style="width: 48px; height: 48px; background: rgba(239, 68, 68, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--destructive);">
+                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
                 </div>
-                <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
-                    <button onclick="bookingSystem.loadMechanicAvailability('${selectedDate}')" 
-                            style="padding: 0.5rem 1rem; background: hsl(var(--destructive)); color: hsl(var(--destructive-foreground)); border: none; border-radius: 0.375rem; cursor: pointer; font-size: 0.875rem; font-weight: 500; transition: all 0.2s ease;"
-                            onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 8px hsl(var(--destructive) / 0.3)'"
-                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
-                        ${retryLabel}
-                    </button>
-                    <button onclick="bookingSystem.loadBasicMechanicList()" 
-                            style="padding: 0.5rem 1rem; background: hsl(var(--secondary)); color: hsl(var(--secondary-foreground)); border: 1px solid hsl(var(--border)); border-radius: 0.375rem; cursor: pointer; font-size: 0.875rem; font-weight: 500; transition: all 0.2s ease;"
-                            onmouseover="this.style.background='hsl(var(--accent))'"
-                            onmouseout="this.style.background='hsl(var(--secondary))'">
-                        Load Basic List
-                    </button>
-                </div>
+                <h5 style="margin: 0 0 0.5rem 0; color: var(--destructive); font-weight: 600;">Unable to load availability</h5>
+                <p style="margin: 0 0 1rem 0; color: var(--muted-foreground); font-size: 0.875rem; line-height: 1.4;">${errorMessage}</p>
+                <p style="margin: 0; color: var(--muted-foreground); font-size: 0.875rem;">You can still select a mechanic from the dropdown above.</p>
             </div>
         `;
     }
@@ -563,14 +517,14 @@ class BookingSystem {
         });
 
         mechanicAvailability.innerHTML = `
-            <div style="text-align: center; padding: 1rem; background: hsl(var(--secondary)); border: 1px solid hsl(var(--border)); border-radius: 0.5rem;">
-                <div style="margin-bottom: 0.5rem;">
-                    <span style="font-size: 1.5rem;">👨‍🔧</span>
+            <div style="text-align: center; padding: 2rem; background: var(--secondary); border: 1px solid var(--border); border-radius: 0.75rem;">
+                <div style="width: 48px; height: 48px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: white;">
+                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                    </svg>
                 </div>
-                <p style="margin: 0; color: hsl(var(--foreground)); font-weight: 500; margin-bottom: 0.25rem;">
-                    Basic mechanic list loaded
-                </p>
-                <p style="margin: 0; color: hsl(var(--muted-foreground)); font-size: 0.875rem;">
+                <h5 style="margin: 0 0 0.5rem 0; color: var(--foreground); font-weight: 600;">Basic mechanic list loaded</h5>
+                <p style="margin: 0; color: var(--muted-foreground); font-size: 0.875rem; line-height: 1.4;">
                     Availability information is not available. Please select any mechanic to proceed.
                 </p>
             </div>

@@ -1,5 +1,5 @@
 <?php
-// Add Mechanic API Endpoint
+// Update Mechanic API Endpoint
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
@@ -26,10 +26,19 @@ require_once __DIR__ . '/../config/database.php';
 
 try {
     // Get POST data
+    $id = intval($_POST['id'] ?? 0);
     $name = trim($_POST['name'] ?? '');
     $specialization = trim($_POST['specialization'] ?? '');
 
     // Validate input
+    if ($id <= 0) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Invalid mechanic ID'
+        ]);
+        exit();
+    }
+
     if (empty($name)) {
         echo json_encode([
             'success' => false,
@@ -49,11 +58,23 @@ try {
     // Create database connection
     $pdo = new PDO($dsn, $username, $password, $options);
 
-    // Check if mechanic with same name already exists
-    $checkStmt = $pdo->prepare("SELECT id FROM mechanics WHERE name = ?");
-    $checkStmt->execute([$name]);
+    // Check if mechanic exists
+    $checkStmt = $pdo->prepare("SELECT id FROM mechanics WHERE id = ?");
+    $checkStmt->execute([$id]);
     
-    if ($checkStmt->fetch()) {
+    if (!$checkStmt->fetch()) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'Mechanic not found'
+        ]);
+        exit();
+    }
+
+    // Check if another mechanic with same name exists (excluding current mechanic)
+    $duplicateStmt = $pdo->prepare("SELECT id FROM mechanics WHERE name = ? AND id != ?");
+    $duplicateStmt->execute([$name, $id]);
+    
+    if ($duplicateStmt->fetch()) {
         echo json_encode([
             'success' => false,
             'message' => 'A mechanic with this name already exists'
@@ -61,18 +82,16 @@ try {
         exit();
     }
 
-    // Insert new mechanic
-    $stmt = $pdo->prepare("INSERT INTO mechanics (name, specialization) VALUES (?, ?)");
-    $result = $stmt->execute([$name, $specialization]);
+    // Update mechanic
+    $stmt = $pdo->prepare("UPDATE mechanics SET name = ?, specialization = ? WHERE id = ?");
+    $result = $stmt->execute([$name, $specialization, $id]);
 
     if ($result) {
-        $mechanicId = $pdo->lastInsertId();
-        
         echo json_encode([
             'success' => true,
-            'message' => 'Mechanic added successfully',
+            'message' => 'Mechanic updated successfully',
             'mechanic' => [
-                'id' => $mechanicId,
+                'id' => $id,
                 'name' => $name,
                 'specialization' => $specialization
             ]
@@ -80,21 +99,21 @@ try {
     } else {
         echo json_encode([
             'success' => false,
-            'message' => 'Failed to add mechanic'
+            'message' => 'Failed to update mechanic'
         ]);
     }
 
 } catch (PDOException $e) {
-    error_log("Database error in add_mechanic.php: " . $e->getMessage());
+    error_log("Database error in update_mechanic.php: " . $e->getMessage());
     echo json_encode([
         'success' => false,
         'message' => 'Database error occurred'
     ]);
 } catch (Exception $e) {
-    error_log("General error in add_mechanic.php: " . $e->getMessage());
+    error_log("General error in update_mechanic.php: " . $e->getMessage());
     echo json_encode([
         'success' => false,
-        'message' => 'An error occurred while adding the mechanic'
+        'message' => 'An error occurred while updating the mechanic'
     ]);
 }
 ?>
