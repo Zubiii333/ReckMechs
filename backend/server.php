@@ -109,8 +109,16 @@ if (in_array($path_extension, $static_extensions)) {
             
             // Add cache headers for static assets
             header('Content-Type: ' . $mime_type);
-            header('Cache-Control: public, max-age=31536000'); // 1 year cache
-            header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT');
+            
+            // Don't cache CSS files to allow for easy updates
+            if ($path_extension === 'css') {
+                header('Cache-Control: no-cache, no-store, must-revalidate');
+                header('Pragma: no-cache');
+                header('Expires: 0');
+            } else {
+                header('Cache-Control: public, max-age=31536000'); // 1 year cache
+                header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT');
+            }
             
             readfile($file_path);
             exit();
@@ -157,10 +165,14 @@ if (isset($frontend_files[$request_uri])) {
             $mime_type = $mime_types[$extension] ?? 'text/plain';
             header('Content-Type: ' . $mime_type);
             
-            // Add cache headers for static assets (except HTML)
-            if ($extension !== 'html') {
+            // Add cache headers for static assets (except HTML and CSS)
+            if ($extension !== 'html' && $extension !== 'css') {
                 header('Cache-Control: public, max-age=31536000');
                 header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT');
+            } elseif ($extension === 'css') {
+                header('Cache-Control: no-cache, no-store, must-revalidate');
+                header('Pragma: no-cache');
+                header('Expires: 0');
             }
             
             readfile($file_path);

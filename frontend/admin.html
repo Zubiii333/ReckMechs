@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - ReckMechs</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=2024010802">
     <style>
         body {
             background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--secondary)) 100%);
@@ -213,17 +213,17 @@
 
         /* Modern Table */
         .appointments-section {
-            background: hsl(var(--card));
-            border: 1px solid hsl(var(--border));
+            background: var(--card);
+            border: 2px solid var(--border);
             border-radius: 1rem;
             overflow: hidden;
-            box-shadow: 0 4px 20px hsl(var(--foreground) / 0.1);
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.1);
         }
 
         .section-header {
             padding: 1.5rem 2rem;
-            background: linear-gradient(135deg, hsl(var(--secondary)), hsl(var(--muted)));
-            border-bottom: 1px solid hsl(var(--border));
+            background: var(--secondary);
+            border-bottom: 2px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -232,7 +232,7 @@
         .section-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: hsl(var(--foreground));
+            color: var(--foreground);
             margin: 0;
         }
 
@@ -243,9 +243,9 @@
 
         .table-btn {
             padding: 0.5rem 1rem;
-            border: 1px solid hsl(var(--border));
-            background: hsl(var(--background));
-            color: hsl(var(--foreground));
+            border: 2px solid var(--border);
+            background: var(--background);
+            color: var(--foreground);
             border-radius: 0.5rem;
             cursor: pointer;
             font-size: 0.875rem;
@@ -253,7 +253,8 @@
         }
 
         .table-btn:hover {
-            background: hsl(var(--accent));
+            background: var(--accent);
+            border-color: var(--primary);
         }
 
         .appointments-table-container {
@@ -268,12 +269,12 @@
         }
 
         .appointments-table th {
-            background: hsl(var(--muted));
-            color: hsl(var(--foreground));
+            background: var(--muted);
+            color: var(--foreground);
             font-weight: 600;
             padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid hsl(var(--border));
+            border-bottom: 2px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 10;
@@ -284,7 +285,7 @@
 
         .appointments-table td {
             padding: 1rem;
-            border-bottom: 1px solid hsl(var(--border));
+            border-bottom: 1px solid var(--border);
             vertical-align: middle;
         }
 
@@ -293,18 +294,18 @@
         }
 
         .appointments-table tr:hover {
-            background-color: hsl(var(--accent));
+            background-color: var(--accent);
         }
 
         .appointment-row.editing {
-            background: linear-gradient(135deg, hsl(var(--primary) / 0.05), hsl(var(--primary) / 0.1));
-            border-left: 4px solid hsl(var(--primary));
+            background: rgba(59, 130, 246, 0.05);
+            border-left: 4px solid var(--primary);
         }
 
         /* Modern Form Elements */
         .editable-field, .editable-select {
-            background: transparent;
-            border: 1px solid transparent;
+            background: var(--background);
+            border: 2px solid var(--border);
             padding: 0.5rem;
             border-radius: 0.5rem;
             font-size: 0.9rem;
@@ -314,9 +315,13 @@
 
         .editable-field:focus, .editable-select:focus {
             outline: none;
-            border-color: hsl(var(--primary));
-            background: hsl(var(--background));
-            box-shadow: 0 0 0 3px hsl(var(--primary) / 0.1);
+            border-color: var(--primary);
+            background: var(--background);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .editable-field:hover, .editable-select:hover {
+            border-color: #cbd5e1;
         }
 
         /* Modern Buttons */
@@ -624,13 +629,11 @@
                 <form id="mechanicForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 600px;">
                     <div>
                         <label for="mechanicName" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Mechanic Name:</label>
-                        <input type="text" id="mechanicName" name="name" required 
-                               style="width: 100%; padding: 0.75rem; border: 1px solid hsl(var(--border)); border-radius: 0.5rem; font-size: 1rem;">
+                        <input type="text" id="mechanicName" name="name" required class="form-input">
                     </div>
                     <div>
                         <label for="mechanicSpecialization" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Specialization:</label>
-                        <input type="text" id="mechanicSpecialization" name="specialization" required 
-                               style="width: 100%; padding: 0.75rem; border: 1px solid hsl(var(--border)); border-radius: 0.5rem; font-size: 1rem;">
+                        <input type="text" id="mechanicSpecialization" name="specialization" required class="form-input">
                     </div>
                     <div style="grid-column: 1 / -1; display: flex; gap: 1rem; margin-top: 1rem;">
                         <button type="submit" class="save-btn" style="padding: 0.75rem 1.5rem;">

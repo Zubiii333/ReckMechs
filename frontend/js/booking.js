@@ -197,9 +197,6 @@ class BookingSystem {
         const mechanicSelect = document.getElementById('mechanicSelect');
         const mechanicAvailability = document.getElementById('mechanicAvailability');
 
-        // Clear and populate select dropdown
-        mechanicSelect.innerHTML = '<option value="">Choose a mechanic...</option>';
-
         // Sort by availability (available first)
         const sortedMechanics = mechanics.sort((a, b) => {
             if (a.available_slots === 0 && b.available_slots > 0) return 1;
@@ -217,70 +214,81 @@ class BookingSystem {
         });
 
         let html = `
-            <div style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid hsl(var(--border));">
-                <h4 style="margin: 0 0 0.5rem 0; color: hsl(var(--foreground));">Availability for ${formattedDate}</h4>
+            <div style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border);">
+                <h4 style="margin: 0 0 0.5rem 0; color: var(--foreground);">Available Mechanics for ${formattedDate}</h4>
                 <div style="display: flex; gap: 1rem; font-size: 0.875rem;">
-                    <span style="padding: 0.25rem 0.5rem; background: hsl(var(--secondary)); border-radius: 0.25rem;">
+                    <span style="padding: 0.25rem 0.5rem; background: var(--secondary); border-radius: 0.25rem;">
                         ${mechanics.length} mechanics total
                     </span>
-                    <span style="padding: 0.25rem 0.5rem; background: hsl(142 76% 36% / 0.1); color: hsl(142 76% 36%); border-radius: 0.25rem;">
+                    <span style="padding: 0.25rem 0.5rem; background: rgba(34, 197, 94, 0.1); color: #22c55e; border-radius: 0.25rem;">
                         ${availableMechanics.length} available
                     </span>
                 </div>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
         `;
 
-        sortedMechanics.forEach(mechanic => {
-            // Add to dropdown if available
-            if (mechanic.available_slots > 0) {
-                const option = document.createElement('option');
-                option.value = mechanic.id;
-                option.textContent = `${mechanic.name} (${mechanic.available_slots}/4 slots available)`;
-                mechanicSelect.appendChild(option);
-            }
-
-            // Requirement 2.2: Mark mechanic as unavailable when they have 4 appointments (0 available)
-            let statusClass = 'unavailable';
-            let statusText = 'Fully Booked (0/4 available)';
-            let statusIcon = '❌';
-
-            if (mechanic.available_slots > 0) {
-                statusClass = mechanic.available_slots >= 3 ? 'available' : 'limited';
-                statusText = `${mechanic.available_slots}/4 slots available`;
-                statusIcon = mechanic.available_slots >= 3 ? '✅' : '⚠️';
-            }
-
-            const isClickable = mechanic.available_slots > 0;
-            const cursorStyle = isClickable ? 'cursor: pointer;' : 'cursor: not-allowed; opacity: 0.6;';
-
+        if (availableMechanics.length === 0) {
             html += `
-                <div class="mechanic-item" data-mechanic-id="${mechanic.id}" 
-                     style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: hsl(var(--card)); border: 1px solid hsl(var(--border)); border-radius: 0.5rem; transition: all 0.2s ease; ${cursorStyle}"
-                     ${isClickable ? `onclick="bookingSystem.selectMechanic(${mechanic.id}, '${mechanic.name}')"` : ''}>
-                    <div>
-                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-                            <span style="font-weight: 500; color: hsl(var(--foreground));">${mechanic.name}</span>
-                            <span>${statusIcon}</span>
-                        </div>
-                    </div>
-                    <div>
-                        <span style="padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; 
-                                     ${statusClass === 'available' ? 'background: hsl(142 76% 36% / 0.1); color: hsl(142 76% 36%);' : 
-                                       statusClass === 'limited' ? 'background: hsl(45 93% 47% / 0.1); color: hsl(45 93% 47%);' : 
-                                       'background: hsl(var(--destructive) / 0.1); color: hsl(var(--destructive));'}">
-                            ${statusText}
-                        </span>
-                    </div>
+                <div style="text-align: center; padding: 2rem; background: rgba(239, 68, 68, 0.1); border: 2px solid rgba(239, 68, 68, 0.2); border-radius: 0.5rem;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">😔</div>
+                    <h4 style="margin: 0 0 0.5rem 0; color: var(--destructive);">No mechanics available</h4>
+                    <p style="margin: 0; color: var(--muted-foreground); font-size: 0.875rem;">
+                        All mechanics are fully booked on this date. Please choose a different date.
+                    </p>
                 </div>
             `;
-        });
+        } else {
+            sortedMechanics.forEach(mechanic => {
+                // Requirement 2.2: Mark mechanic as unavailable when they have 4 appointments (0 available)
+                let statusClass = 'unavailable';
+                let statusText = 'Fully Booked (0/4 available)';
+                let statusIcon = '❌';
+
+                if (mechanic.available_slots > 0) {
+                    statusClass = mechanic.available_slots >= 3 ? 'available' : 'limited';
+                    statusText = `${mechanic.available_slots}/4 slots available`;
+                    statusIcon = mechanic.available_slots >= 3 ? '✅' : '⚠️';
+                }
+
+                const isClickable = mechanic.available_slots > 0;
+                const cursorStyle = isClickable ? 'cursor: pointer;' : 'cursor: not-allowed; opacity: 0.6;';
+
+                html += `
+                    <div class="mechanic-item" data-mechanic-id="${mechanic.id}" 
+                         style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--card); border: 2px solid var(--border); border-radius: 0.75rem; transition: all 0.2s ease; ${cursorStyle}"
+                         ${isClickable ? `onclick="bookingSystem.selectMechanic(${mechanic.id}, '${mechanic.name}')"` : ''}
+                         ${isClickable ? `onmouseover="this.style.borderColor='var(--primary)'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(59, 130, 246, 0.15)'"` : ''}
+                         ${isClickable ? `onmouseout="this.style.borderColor='var(--border)'; this.style.transform='translateY(0)'; this.style.boxShadow='none'"` : ''}>
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
+                                <span style="font-weight: 600; color: var(--foreground); font-size: 1.1rem;">${mechanic.name}</span>
+                                <span style="font-size: 1.25rem;">${statusIcon}</span>
+                            </div>
+                            <div style="font-size: 0.875rem; color: var(--muted-foreground);">
+                                ${isClickable ? 'Click to select this mechanic' : 'Not available on this date'}
+                            </div>
+                        </div>
+                        <div>
+                            <span style="padding: 0.5rem 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 600; 
+                                         ${statusClass === 'available' ? 'background: rgba(34, 197, 94, 0.1); color: #22c55e; border: 1px solid rgba(34, 197, 94, 0.2);' : 
+                                           statusClass === 'limited' ? 'background: rgba(245, 158, 11, 0.1); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.2);' : 
+                                           'background: rgba(239, 68, 68, 0.1); color: var(--destructive); border: 1px solid rgba(239, 68, 68, 0.2);'}">
+                                ${statusText}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
 
         html += `
             </div>
-            <div style="text-align: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid hsl(var(--border));">
+            <div style="text-align: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid var(--border);">
                 <button onclick="bookingSystem.loadMechanicAvailability('${selectedDate}')" 
-                        style="padding: 0.5rem 1rem; background: hsl(var(--secondary)); border: 1px solid hsl(var(--border)); border-radius: 0.25rem; cursor: pointer; font-size: 0.875rem;">
+                        style="padding: 0.75rem 1.5rem; background: var(--secondary); border: 2px solid var(--border); border-radius: 0.5rem; cursor: pointer; font-size: 0.875rem; font-weight: 500; transition: all 0.2s ease;"
+                        onmouseover="this.style.background='var(--accent)'; this.style.borderColor='var(--primary)'"
+                        onmouseout="this.style.background='var(--secondary)'; this.style.borderColor='var(--border)'">
                     🔄 Refresh Availability
                 </button>
             </div>
@@ -320,8 +328,8 @@ class BookingSystem {
         const mechanicSelect = document.getElementById('mechanicSelect');
         const mechanicAvailability = document.getElementById('mechanicAvailability');
 
-        mechanicSelect.innerHTML = '<option value="">Choose a mechanic...</option>';
-        mechanicAvailability.innerHTML = '<p style="text-align: center; color: hsl(var(--muted-foreground)); margin: 0;">Select a date to see mechanic availability</p>';
+        mechanicSelect.value = '';
+        mechanicAvailability.innerHTML = '<p style="text-align: center; color: var(--muted-foreground); margin: 0; padding: 2rem;">Select a date to see available mechanics</p>';
     }
 
     async handleSubmit(e) {
