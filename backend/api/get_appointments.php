@@ -1,7 +1,4 @@
 <?php
-// Simple Get Appointments API
-// This API shows all appointments for admin panel
-
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');

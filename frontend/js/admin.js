@@ -1,4 +1,3 @@
-// Admin Panel JavaScript - Appointment Management
 class AdminPanel {
     constructor() {
         this.appointments = [];
@@ -1041,7 +1040,6 @@ class AdminPanel {
     }
 }
 
-// Toggle add mechanic form
 function toggleAddMechanicForm() {
     const form = document.getElementById('addMechanicForm');
     if (form) {
@@ -1049,7 +1047,6 @@ function toggleAddMechanicForm() {
     }
 }
 
-// Initialize admin panel when DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
     window.adminPanel = new AdminPanel();
 

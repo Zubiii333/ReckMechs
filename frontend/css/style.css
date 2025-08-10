@@ -1,4 +1,3 @@
-/* CSS Custom Properties (Variables) - Light Theme Only - Updated 2024-01-08 */
 :root {
   --background: #ffffff;
   --foreground: #0f172a;
@@ -22,7 +21,6 @@
   --radius: 0.5rem;
 }
 
-/* Reset and Base Styles */
 * {
   margin: 0;
   padding: 0;
@@ -37,14 +35,11 @@ body {
   font-size: 16px;
 }
 
-/* Container */
 .container {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
 }
-
-/* Navigation */
 .navbar {
   background: var(--background);
   border-bottom: 1px solid var(--border);
@@ -149,7 +144,6 @@ body {
   transition: 0.3s;
 }
 
-/* Hero Section */
 .hero {
   padding: 8rem 0 4rem;
   background: var(--background);
@@ -244,7 +238,6 @@ body {
   box-shadow: 0 20px 40px rgba(15, 23, 42, 0.1);
 }
 
-/* Services Section */
 .services {
   padding: 6rem 0;
   background: var(--background);
@@ -340,7 +333,6 @@ body {
   font-weight: 500;
 }
 
-/* Booking Section */
 .booking {
   padding: 6rem 0;
   background: var(--primary);
@@ -383,7 +375,6 @@ body {
   box-shadow: 0 6px 20px rgba(15, 23, 42, 0.3);
 }
 
-/* Footer */
 .footer {
   background: var(--card);
   border-top: 1px solid var(--border);
@@ -423,7 +414,6 @@ body {
   color: var(--muted-foreground);
 }
 
-/* Form Styles */
 input, textarea, select {
   background: var(--background);
   border: 2px solid var(--border);
@@ -446,7 +436,6 @@ input:hover, textarea:hover, select:hover {
   border-color: #cbd5e1;
 }
 
-/* Specific input styling */
 .form-input {
   background: var(--background);
   border: 2px solid var(--border);
@@ -468,7 +457,6 @@ input:hover, textarea:hover, select:hover {
   border-color: #cbd5e1;
 }
 
-/* Loading Spinner */
 .loading-spinner {
   border: 4px solid var(--border);
   border-top: 4px solid var(--primary);
@@ -481,7 +469,6 @@ input:hover, textarea:hover, select:hover {
   100% { transform: rotate(360deg); }
 }
 
-/* Messages */
 .error-message, .success-message {
   padding: 1rem 1.5rem;
   border-radius: 0.75rem;
@@ -504,7 +491,6 @@ input:hover, textarea:hover, select:hover {
   border: 1px solid rgba(34, 197, 94, 0.2);
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .nav-menu {
     display: none;

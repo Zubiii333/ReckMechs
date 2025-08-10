@@ -688,7 +688,6 @@
     </style>
 </head>
 <body>
-    <!-- Modern Navigation -->
     <nav class="admin-nav">
         <div class="nav-content">
             <a href="index.html" class="nav-brand">
@@ -719,7 +718,6 @@
     </nav>
 
     <div class="admin-container">
-        <!-- Modern Header -->
         <div class="admin-header">
             <div class="header-content">
                 <h1 class="admin-title">Admin Dashboard</h1>
@@ -738,7 +736,6 @@
             </div>
         </div>
 
-        <!-- Stats Cards -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-header">
@@ -769,13 +766,11 @@
             </div>
         </div>
 
-        <!-- Messages Area -->
         <div id="messagesArea"></div>
         <div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
 
 
 
-        <!-- Modern Appointments Table -->
         <div class="appointments-section">
             <div class="section-header">
                 <h2 class="section-title">Appointment Management</h2>
@@ -807,11 +802,9 @@
                         </tr>
                     </thead>
                     <tbody id="appointmentsTableBody">
-                        <!-- Appointments will be loaded here -->
                     </tbody>
                 </table>
                 
-                <!-- Modern Empty State -->
                 <div class="empty-state" id="emptyState" style="display: none;">
                     <div class="empty-state-icon">🚗</div>
                     <h3 class="empty-state-title">No Appointments Yet</h3>
@@ -822,7 +815,6 @@
             </div>
         </div>
 
-        <!-- Mechanics Management Section -->
         <div class="appointments-section" style="margin-top: 2rem;">
             <div class="section-header">
                 <h2 class="section-title">All Mechanics</h2>
@@ -837,7 +829,6 @@
                 </div>
             </div>
             
-            <!-- Add Mechanic Form -->
             <div id="addMechanicForm" style="display: none; padding: 2rem; border-bottom: 2px solid var(--border);">
                 <form id="mechanicForm" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 600px;">
                     <div>
@@ -866,7 +857,6 @@
                 </form>
             </div>
 
-            <!-- Mechanics List -->
             <div class="appointments-table-container">
                 <table class="appointments-table" id="mechanicsTable">
                     <thead>
@@ -879,11 +869,9 @@
                         </tr>
                     </thead>
                     <tbody id="mechanicsTableBody">
-                        <!-- Mechanics will be loaded here -->
                     </tbody>
                 </table>
                 
-                <!-- Empty State for Mechanics -->
                 <div class="empty-state" id="mechanicsEmptyState" style="display: none;">
                     <div class="empty-state-icon">
                         <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--muted-foreground);">
@@ -899,7 +887,6 @@
         </div>
     </div>
 
-    <!-- Modern Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay" style="display: none;">
         <div class="loading-content">
             <div class="loading-spinner"></div>

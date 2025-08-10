@@ -1,4 +1,3 @@
-// Car Workshop Booking System - Simple Implementation
 class BookingSystem {
     constructor() {
         this.mechanics = [];
@@ -917,7 +916,6 @@ class BookingSystem {
     }
 }
 
-// Initialize booking system when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     window.bookingSystem = new BookingSystem();
 });

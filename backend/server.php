@@ -1,24 +1,16 @@
 <?php
-// Simple PHP Router for Car Workshop API
-// This handles routing for the backend APIs
-
-// Set CORS headers for all requests
+header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// Handle preflight OPTIONS requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
 
-// Get the request URI and remove query string
 $request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-
-// Route API requests
 if (strpos($request_uri, '/backend/api/') === 0) {
-    // Extract the API endpoint
     $api_path = str_replace('/backend/api/', '', $request_uri);
     
     switch ($api_path) {
@@ -71,7 +63,6 @@ if (strpos($request_uri, '/backend/api/') === 0) {
     exit();
 }
 
-// Serve static files from frontend directory
 if (strpos($request_uri, '/frontend/') === 0) {
     $file_path = __DIR__ . '/../' . $request_uri;
     if (file_exists($file_path) && is_file($file_path)) {
@@ -82,12 +73,10 @@ if (strpos($request_uri, '/frontend/') === 0) {
     }
 }
 
-// Handle direct static file requests (css, js, images) - Enhanced for Railway
 $static_extensions = ['css', 'js', 'png', 'jpg', 'jpeg', 'gif', 'svg', 'ico', 'woff', 'woff2', 'ttf', 'eot'];
 $path_extension = pathinfo($request_uri, PATHINFO_EXTENSION);
 
 if (in_array($path_extension, $static_extensions)) {
-    // Try multiple possible paths for Railway compatibility
     $possible_paths = [
         __DIR__ . '/../frontend' . $request_uri,
         __DIR__ . '/frontend' . $request_uri,
