@@ -1,6 +1,5 @@
 <?php
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
@@ -48,8 +47,6 @@ if (strpos($request_uri, '/backend/api/') === 0) {
         case 'update_mechanic':
             require_once __DIR__ . '/api/update_mechanic.php';
             break;
-            
-        
             
         default:
             header('Content-Type: application/json');
@@ -103,7 +100,6 @@ if (in_array($path_extension, $static_extensions)) {
             
             $mime_type = $mime_types[$path_extension] ?? 'application/octet-stream';
 
-            // Always disable caching to avoid stale assets during development/grading
             header('Content-Type: ' . $mime_type);
             header('Cache-Control: no-cache, no-store, must-revalidate');
             header('Pragma: no-cache');
@@ -115,7 +111,6 @@ if (in_array($path_extension, $static_extensions)) {
     }
 }
 
-// Serve frontend files directly - Enhanced for Railway
 $frontend_files = [
     '/' => 'frontend/index.html',
     '/index.html' => 'frontend/index.html',
@@ -128,7 +123,6 @@ $frontend_files = [
 ];
 
 if (isset($frontend_files[$request_uri])) {
-    // Try multiple possible paths for Railway compatibility
     $relative_path = $frontend_files[$request_uri];
     $possible_paths = [
         __DIR__ . '/../' . $relative_path,
@@ -154,7 +148,6 @@ if (isset($frontend_files[$request_uri])) {
             $mime_type = $mime_types[$extension] ?? 'text/plain';
             header('Content-Type: ' . $mime_type);
 
-            // Always disable caching for served files
             header('Cache-Control: no-cache, no-store, must-revalidate');
             header('Pragma: no-cache');
             header('Expires: 0');
@@ -165,7 +158,6 @@ if (isset($frontend_files[$request_uri])) {
     }
 }
 
-// Default: serve index.html for SPA routing - Enhanced for Railway
 $possible_index_paths = [
     __DIR__ . '/../frontend/index.html',
     __DIR__ . '/frontend/index.html',
@@ -194,7 +186,6 @@ if (!$index_served) {
     echo '<p>Working directory: ' . getcwd() . '</p>';
     echo '<p>Available files:</p><ul>';
     
-    // Debug: Show available files
     if (is_dir('./frontend')) {
         $files = scandir('./frontend');
         foreach ($files as $file) {

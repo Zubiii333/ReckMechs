@@ -1,9 +1,11 @@
+// Main booking system class
 class BookingSystem {
     constructor() {
         this.mechanics = [];
         this.init();
     }
 
+    // Initialize the booking system
     init() {
         console.log('Booking system initialized');
         this.setupEventListeners();

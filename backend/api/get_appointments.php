@@ -7,7 +7,6 @@ header('Access-Control-Allow-Headers: Content-Type');
 try {
     require_once __DIR__ . '/../config/database.php';
 
-    // Step 1: Get all appointments with mechanic details (LEFT JOIN to handle missing mechanics)
     $stmt = $pdo->query("
         SELECT 
             a.id,
@@ -28,7 +27,6 @@ try {
 
     $appointments = $stmt->fetchAll();
 
-// Step 2: Format appointments for admin panel display
 $formatted_appointments = [];
 foreach ($appointments as $appointment) {
     $formatted_appointments[] = [
@@ -41,14 +39,12 @@ foreach ($appointments as $appointment) {
         'appointment_date' => $appointment['appointment_date'],
         'mechanic_id' => $appointment['mechanic_id'],
         'mechanic_name' => $appointment['mechanic_name'],
-        'status' => 'confirmed' // Default status for display
+        'status' => 'confirmed'
     ];
 }
 
-// Step 3: Count total appointments
 $total_count = count($appointments);
 
-    // Step 4: Return the appointments list
     echo json_encode([
         'success' => true,
         'appointments' => $formatted_appointments,
@@ -56,7 +52,6 @@ $total_count = count($appointments);
     ]);
 
 } catch (Exception $e) {
-    // Return error as JSON
     echo json_encode([
         'success' => false,
         'message' => 'Error loading appointments: ' . $e->getMessage(),

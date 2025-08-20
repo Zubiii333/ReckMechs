@@ -1,3 +1,4 @@
+// Main admin panel class for managing appointments and mechanics
 class AdminPanel {
     constructor() {
         this.appointments = [];
@@ -9,6 +10,7 @@ class AdminPanel {
         this.init();
     }
 
+    // Initialize the admin panel
     init() {
         console.log('Admin Panel initialized');
         this.bindEvents();
@@ -1040,6 +1042,7 @@ class AdminPanel {
     }
 }
 
+// Toggle visibility of add mechanic form
 function toggleAddMechanicForm() {
     const form = document.getElementById('addMechanicForm');
     if (form) {

@@ -48,7 +48,7 @@
     <section id="home" class="hero">
         <div class="hero-container">
             <div class="hero-content">
-                <h1 class="hero-title">Professional Car Service & Repair</h1>
+                <h1 class="hero-title">ReckMechs</h1>
                 <p class="hero-subtitle">Book your appointment with our expert mechanics. Quality service, trusted by thousands of customers.</p>
                 <div class="hero-stats">
                     <div class="stat">
@@ -201,8 +201,8 @@
                 </div>
                 <div class="footer-section">
                     <h4>Contact Info</h4>
-                    <p>📍 123 Workshop Street, City</p>
-                    <p>📞 (555) 123-4567</p>
+                    <p>📍 123 Badda Link Road, Dhaka</p>
+                    <p>📞 0167999999</p>
                     <p>✉️ info@reckmechs.com</p>
                 </div>
                 <div class="footer-section">
@@ -213,11 +213,22 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 ReckMechs. All rights reserved.</p>
+                <p>&copy; 2025 ReckMechs. All rights reserved.</p>
             </div>
         </div>
     </footer>
     
     <script src="js/booking.js"></script>
+    <script>
+        // Handle hero booking button click
+        document.addEventListener('DOMContentLoaded', function() {
+            const heroBookingBtn = document.getElementById('heroBookingBtn');
+            if (heroBookingBtn) {
+                heroBookingBtn.addEventListener('click', function() {
+                    window.location.href = 'book.html';
+                });
+            }
+        });
+    </script>
 </body>
 </html>

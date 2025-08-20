@@ -1,19 +1,9 @@
 <?php
-/**
- * Simple Database Configuration
- * Car Workshop Appointment System - Single Database File
- */
-
-// Database path - Railway compatible
 $db_path = __DIR__ . '/workshop.db';
-
-// For Railway deployment, ensure directory is writable
 if (!is_writable(dirname($db_path))) {
-    // Fallback to tmp directory if current directory is not writable
     $db_path = sys_get_temp_dir() . '/workshop.db';
 }
 
-// Connect to SQLite database
 try {
     $pdo = new PDO('sqlite:' . $db_path);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -25,7 +15,6 @@ try {
     ]));
 }
 
-// Create tables if they don't exist
 $pdo->exec("
     CREATE TABLE IF NOT EXISTS mechanics (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,7 +38,6 @@ $pdo->exec("
     )
 ");
 
-// Initialize with sample data if tables are empty
 $mechanic_count = $pdo->query("SELECT COUNT(*) FROM mechanics")->fetchColumn();
 if ($mechanic_count == 0) {
     $mechanics = [
@@ -64,7 +52,5 @@ if ($mechanic_count == 0) {
     foreach ($mechanics as $mechanic) {
         $stmt->execute($mechanic);
     }
-    
-    // No sample appointments - start with clean slate
 }
 ?>
