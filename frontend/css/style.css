@@ -218,6 +218,8 @@ body {
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
   align-self: flex-start;
+  text-decoration: none;
+  display: inline-block;
 }
 
 .cta-button:hover {
